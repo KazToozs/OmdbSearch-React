@@ -29,42 +29,7 @@ const movieListSlice = createSlice({
       state.loading = 'failed';
     },
   },
-  // Must use 'builder' notation here due to TypeScript not liking 'lookup table', standard notations
-  // extraReducers: builder => {
-  //   builder.addCase(fetchMovieList.fulfilled, (state, action) => {
-  //     // TODO: handle json movie objects correctly
-  //     // TODO: handle failure state
-  //     if (action.payload.ok) {
-  //       state.movieList.push(action.payload.json())
-  //       state.loading = 'success'
-  //     }
-
-  //   })
-  //   builder.addCase(fetchMovieList.pending, (state, action) {
-  //     // TODO: set loader to pending
-  //     state.loading = 'pending'
-  //   })
-  // }
 });
-
-// const fetchMovieList = createAsyncThunk(
-//   'movieList/fetchList',
-//   async (search: string) => {
-//     const searchParam = "&s" + search;
-//     const response = await fetch(API_URL + API_KEY + searchParam)
-//     if (response.ok) {
-//       try {
-//         const data = await response.json()
-//         return data
-//       } catch (error) {
-//         console.log('JSON error')
-//         return (error);
-//       }
-//     } else {
-//       return ("Error in fetch response: " + response.status)
-//     }
-//   }
-// )
 
 export const {
   getMovieListSuccess,
