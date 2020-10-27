@@ -1,12 +1,12 @@
 import React, { Dispatch, useEffect, useState } from 'react';
-import { Dialog, DialogTitle, TextField } from '@material-ui/core';
+import { CircularProgress, Dialog, DialogTitle, TextField } from '@material-ui/core';
 import { List } from '@material-ui/core';
 import { ListItem } from '@material-ui/core';
 import { ListItemText } from '@material-ui/core';
 import { Provider, useDispatch, useSelector } from 'react-redux'
 
 import './app.scss';
-import { fetchMovieSearchList } from './slices/movieListSlice';
+import { fetchMovieSearchList, MovieListState } from './slices/movieListSlice';
 import { fetchMovieDetails, MovieDetailsState } from './slices/movieDetailsSlice';
 import { setOpen } from './slices/movieDetailsSlice';
 import rootReducer, { RootState } from './rootReducer';
@@ -48,30 +48,31 @@ class Omdb {
 // TODO: move this into it's own file
 interface MovieDetailDialogProps {
   open: boolean,
-  movieDetails: MovieDetailed
+  movieDetailsState: MovieDetailsState
 }
 function MovieDetailDialog(props: MovieDetailDialogProps) {
   let info
-  if (props.movieDetails == null) {
+  if (props.movieDetailsState.movieDetails == null) {
     info = <label>Not loaded yet!</label>
   } else {
-    const actors = props.movieDetails.actors.map(actor =>
+    const actors = props.movieDetailsState.movieDetails.actors.map(actor =>
         <label key={actor}>{actor}</label>
         );
       console.log(actors)
     info = <div>
-      <label>ID: {props.movieDetails.imdb.id}</label>
-      <label>Poster: {props.movieDetails.poster}</label>
-      <label>Title: {props.movieDetails.title}</label>
-      <label>Type: {props.movieDetails.type}</label>
-      <label>Year: {props.movieDetails.year}</label>
-      <label>Synopsis: {props.movieDetails.plot}</label>
+      <label>ID: {props.movieDetailsState.movieDetails.imdb.id}</label>
+      <label>Poster: {props.movieDetailsState.movieDetails.poster}</label>
+      <label>Title: {props.movieDetailsState.movieDetails.title}</label>
+      <label>Type: {props.movieDetailsState.movieDetails.type}</label>
+      <label>Year: {props.movieDetailsState.movieDetails.year}</label>
+      <label>Synopsis: {props.movieDetailsState.movieDetails.plot}</label>
       <label>Actors: {actors}</label>
     </div>
   }
   return <Dialog open={props.open}>
     <DialogTitle id="simple-dialog-title">Movie Details</DialogTitle>
-    {info}
+    {props.movieDetailsState.loading === 'pending' ? <CircularProgress size={68} /> : 
+    props.movieDetailsState.loading === 'success' ? info : <label>Failed to load info!</label>}
 
   </Dialog>
 }
@@ -81,19 +82,19 @@ const App: React.FC = () => {
   const dispatch = useDispatch()
 
   // useSelector to use data from store and subscribe to updates
-  const movieList: MovieSearchResult = useSelector(
-    (state: RootState) => state.movieList.movieList
+  const movieListState: MovieListState = useSelector(
+    (state: RootState) => state.movieList
   )
 
-  const movieDetails: MovieDetailsState = useSelector(
+  const movieDetailsState: MovieDetailsState = useSelector(
     (state: RootState) => state.movieDetails
   )
 
   const [searchString, setSearchString] = useState("")
 
-  useEffect(() => {
-    omdbObject.searchMovies("test", dispatch)    
-  }, [])
+  // useEffect(() => {
+  //   omdbObject.searchMovies("test", dispatch)    
+  // }, [])
   
   function handleSearchOnChange(event) {
     omdbObject.searchMovies(event.target.value, dispatch)
@@ -107,14 +108,16 @@ const App: React.FC = () => {
   
   return <div className="app">
     <TextField label="Search" margin="normal" variant="outlined" value={searchString} onChange={handleSearchOnChange}/>
+    {movieListState.loading === "pending" ? <CircularProgress size={68} /> : 
+    movieListState.loading === "failed" ? <label>Failed to load list: {movieListState.error}</label> : 
     <List >
-      {movieList.map(({imdbId, posterUrl, title, ...rest }) => (
+      {movieListState.movieList.map(({imdbId, posterUrl, title, ...rest }) => (
         <ListItem key={imdbId} button onClick={() => handleItemClick(imdbId)}>
           <ListItemText>{title}</ListItemText>
-          <MovieDetailDialog open={movieDetails.open} movieDetails={movieDetails.movieDetails}/>
+          <MovieDetailDialog open={movieDetailsState.open} movieDetailsState={movieDetailsState}/>
         </ListItem>
       ))}
-    </List>
+    </List>}
   </div>;
 };
 

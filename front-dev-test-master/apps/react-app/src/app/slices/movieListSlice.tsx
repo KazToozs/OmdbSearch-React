@@ -6,14 +6,16 @@ import durableJsonLint from 'durable-json-lint'
 const API_URL = 'http://www.omdbapi.com/?';
 const API_KEY = '&apikey=23aaa32';
 
-interface MovieListState {
+export interface MovieListState {
   movieList: MovieSearchResult;
   loading: 'idle' | 'pending' | 'success' | 'failed';
+  error: string;
 }
 
 const initialMovieListState: MovieListState = {
   movieList: [],
   loading: 'idle',
+  error: null
 };
 
 const movieListSlice = createSlice({
@@ -29,6 +31,7 @@ const movieListSlice = createSlice({
       // TODO: set loading banner based on failure to load
       state.movieList = [];
       state.loading = 'failed';
+      state.error = action.payload
     },
   },
 });
@@ -78,7 +81,7 @@ export const fetchMovieSearchList = (search: string): AppThunk => async (
     // API can receive requests that cannot be treated, in which case it returns "{"Response":"False","Error":"Error blah blah"}"
     // This must be handled here
     if (jsonData.Response === 'False')
-      throw 'API Input error, recieved: ' + jsonData.Error
+      throw 'API Input error, received: ' + jsonData.Error
 
   } catch (err) {
     dispatch(getMovieSearchListFailed(err.toString()));
