@@ -26,6 +26,7 @@ const movieListSlice = createSlice({
       state.loading = 'success';
     },
     getMovieSearchListFailed(state, action: PayloadAction<string>) {
+      // TODO: set loading banner based on failure to load
       state.movieList = [];
       state.loading = 'failed';
     },
@@ -37,6 +38,10 @@ export const {
   getMovieSearchListFailed,
 } = movieListSlice.actions;
 
+// Copied from https://github.com/misterhat/omdb/blob/master/index.js
+// No point reinventing the wheel ¯\_(ツ)_/¯
+// Worth having another pass to make TS friendly...
+// Maybe transpose to Omdb class?
 function formatYear(year) {
   var from, to;
   year = year.split('–');
@@ -69,8 +74,12 @@ export const fetchMovieSearchList = (search: string): AppThunk => async (
     const data = await response.text();
     jsonData = JSON.parse(data)
     console.log(jsonData)
+
+    // API can receive requests that cannot be treated, in which case it returns "{"Response":"False","Error":"Error blah blah"}"
+    // This must be handled here
     if (jsonData.Response === 'False')
       throw 'API Input error, recieved: ' + jsonData.Error
+
   } catch (err) {
     dispatch(getMovieSearchListFailed(err.toString()));
     return;
@@ -90,3 +99,4 @@ export const fetchMovieSearchList = (search: string): AppThunk => async (
 };
 
 export default movieListSlice.reducer;
+
