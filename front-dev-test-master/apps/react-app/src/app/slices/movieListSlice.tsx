@@ -22,6 +22,10 @@ const movieListSlice = createSlice({
   name: 'movieList',
   initialState: initialMovieListState,
   reducers: {
+    getMovieSearchListStarted(state) {
+      state.movieList = [];
+      state.loading = 'pending'
+  },
     getMovieSearchListSuccess(state, action: PayloadAction<MovieSearchResult>) {
       // Need to convert data to Movie format
       state.movieList = action.payload;
@@ -37,6 +41,7 @@ const movieListSlice = createSlice({
 });
 
 export const {
+  getMovieSearchListStarted,
   getMovieSearchListSuccess,
   getMovieSearchListFailed,
 } = movieListSlice.actions;
@@ -76,7 +81,6 @@ export const fetchMovieSearchList = (search: string): AppThunk => async (
     // .json() not working, using work around, like here at l.217 https://github.com/misterhat/omdb/blob/master/index.js
     const data = await response.text();
     jsonData = JSON.parse(data)
-    console.log(jsonData)
 
     // API can receive requests that cannot be treated, in which case it returns "{"Response":"False","Error":"Error blah blah"}"
     // This must be handled here

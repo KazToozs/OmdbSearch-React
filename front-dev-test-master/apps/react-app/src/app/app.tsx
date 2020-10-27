@@ -6,8 +6,8 @@ import { ListItemText } from '@material-ui/core';
 import { Provider, useDispatch, useSelector } from 'react-redux'
 
 import './app.scss';
-import { fetchMovieSearchList, MovieListState } from './slices/movieListSlice';
-import { fetchMovieDetails, MovieDetailsState } from './slices/movieDetailsSlice';
+import { fetchMovieSearchList, getMovieSearchListStarted, MovieListState } from './slices/movieListSlice';
+import { fetchMovieDetails, getMovieDetailsFailed, getMovieDetailsStarted, MovieDetailsState } from './slices/movieDetailsSlice';
 import { setOpen } from './slices/movieDetailsSlice';
 import rootReducer, { RootState } from './rootReducer';
 import { createStore, applyMiddleware } from '@reduxjs/toolkit';
@@ -58,7 +58,6 @@ function MovieDetailDialog(props: MovieDetailDialogProps) {
     const actors = props.movieDetailsState.movieDetails.actors.map(actor =>
         <label key={actor}>{actor}</label>
         );
-      console.log(actors)
     info = <div>
       <label>ID: {props.movieDetailsState.movieDetails.imdb.id}</label>
       <label>Poster: {props.movieDetailsState.movieDetails.poster}</label>
@@ -97,12 +96,14 @@ const App: React.FC = () => {
   // }, [])
   
   function handleSearchOnChange(event) {
+    dispatch(getMovieSearchListStarted)
     omdbObject.searchMovies(event.target.value, dispatch)
     setSearchString(event.target.value)
   }
 
   function handleItemClick(id: string) {
     dispatch(setOpen())
+    dispatch(getMovieDetailsStarted)
     omdbObject.getMovie(id, dispatch)
   }
   

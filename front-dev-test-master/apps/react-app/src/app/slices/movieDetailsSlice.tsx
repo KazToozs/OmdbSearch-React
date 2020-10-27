@@ -28,6 +28,10 @@ const movieDetailsSlice = createSlice({
       state.open = !state.open
       console.log(state.open)
     },
+    getMovieDetailsStarted(state) {
+        state.movieDetails = null;
+        state.loading = 'pending'
+    },
     getMovieDetailsSuccess(state, action: PayloadAction<MovieDetailed>) {
       state.movieDetails = action.payload;
       console.log(state.movieDetails)
@@ -42,6 +46,7 @@ const movieDetailsSlice = createSlice({
 });
 
 export const {
+    getMovieDetailsStarted,
     getMovieDetailsSuccess,
     getMovieDetailsFailed,
 } = movieDetailsSlice.actions;
