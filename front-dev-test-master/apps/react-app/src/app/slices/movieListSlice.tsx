@@ -69,6 +69,8 @@ export const fetchMovieSearchList = (search: string): AppThunk => async (
     const data = await response.text();
     jsonData = JSON.parse(data)
     console.log(jsonData)
+    if (jsonData.Response === 'False')
+      throw 'API Input error, recieved: ' + jsonData.Error
   } catch (err) {
     dispatch(getMovieSearchListFailed(err.toString()));
     return;

@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect } from 'react';
+import React, { Dispatch, useEffect, useState } from 'react';
 import { TextField } from '@material-ui/core';
 import { List } from '@material-ui/core';
 import { ListItem } from '@material-ui/core';
@@ -39,17 +39,24 @@ class Omdb {
 const App: React.FC = () => {
   const omdbObject: Omdb = new Omdb
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    omdbObject.searchMovies("test", dispatch)    
-  })
-  // useSelector to use data from store and subscribe to updates
   const movieList: MovieSearchResult = useSelector(
     (state: RootState) => state.movieList.movieList
   )
+
+  const [searchString, setSearchString] = useState("")
+
+  useEffect(() => {
+    omdbObject.searchMovies("test", dispatch)    
+  }, [])
+  // useSelector to use data from store and subscribe to updates
+  
+  function handleSearchOnChange(event) {
+    omdbObject.searchMovies(event.target.value, dispatch)
+    setSearchString(event.target.value)
+  }
   
   return <div className="app">
-    <TextField label="Search" margin="normal" variant="outlined"/>
+    <TextField label="Search" margin="normal" variant="outlined" value={searchString} onChange={handleSearchOnChange}/>
     <List >
       {movieList.map(({imdbId, posterUrl, title, ...rest }) => (
         <ListItem key={imdbId} button {...rest}>
