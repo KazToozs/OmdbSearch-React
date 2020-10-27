@@ -93,9 +93,9 @@ function formatList(raw) {
     return list;
 }
 
-function formatVotes(raw) {
-    return raw ? +raw.match(/\d/g).join('') : null;
-}
+// function formatVotes(raw) {
+//     return raw ? +raw.match(/\d/g).join('') : null;
+// }
 
 function formatAwards(raw) {
     var wins, nominations;
@@ -151,7 +151,7 @@ function makeMovieDetailedFromJson(movie: any) {
         imdb: {
             id: movie.imdbID,
             rating: movie.imdbRating ? +movie.imdbRating : null,
-            votes: formatVotes(movie.imdbVotes)
+            // votes: formatVotes(movie.imdbVotes)
         },
       
         metacritic: movie.Metascore ? +movie.Metascore : null,

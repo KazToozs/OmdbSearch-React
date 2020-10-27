@@ -36,7 +36,7 @@ declare module 'custom-project-typings' {
         imdb: {
             id: string,
             rating: number,
-            votes: number
+            // votes: number
         },
 
         metacritic: number,

@@ -23,7 +23,7 @@ Utiliser l'API avec le paramètre ID (par exemple : `?i=tt7002456`) pour récup�
 # ⚠️ Contraintes
 
 - Utiliser les composants de la librairie [Material UI](https://material-ui.com/) pour la barre de recherche, la liste de résultats, et la fenetre.
-- Utiliser des Function Components et les Hooks React. Pas de Class Components.
+- Utiliser des Function Components et les Hooks React. Pas de Class Components. 
 - Utiliser async / await lors du traitement de Promises. Pas de then() / catch() ou de callbacks.
 - Utiliser fetch pour effectuer les requêtes à l'API. Pas de librairie externe tel Axios.
 - Utiliser Redux pour gérer la liste des films, les états de chargement et d'erreur dans la liste, et la fenetre de détails (son état ouvert/fermé et son contenu). Utiliser useState la barre de recherche.

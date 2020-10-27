@@ -55,10 +55,18 @@ function MovieDetailDialog(props: MovieDetailDialogProps) {
   if (props.movieDetails == null) {
     info = <label>Not loaded yet!</label>
   } else {
+    const actors = props.movieDetails.actors.map(actor =>
+        <label key={actor}>{actor}</label>
+        );
+      console.log(actors)
     info = <div>
       <label>ID: {props.movieDetails.imdb.id}</label>
-    <label>Poster: {props.movieDetails.poster}</label>
-    <label>Title: {props.movieDetails.title}</label>
+      <label>Poster: {props.movieDetails.poster}</label>
+      <label>Title: {props.movieDetails.title}</label>
+      <label>Type: {props.movieDetails.type}</label>
+      <label>Year: {props.movieDetails.year}</label>
+      <label>Synopsis: {props.movieDetails.plot}</label>
+      <label>Actors: {actors}</label>
     </div>
   }
   return <Dialog open={props.open}>
