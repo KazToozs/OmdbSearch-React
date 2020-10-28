@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Movie, MovieSearchResult } from 'custom-project-typings';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { MovieSearchResult } from 'custom-project-typings';
 import { AppThunk } from '../store';
-import durableJsonLint from 'durable-json-lint'
 import { formatYear } from '../utils/omdbJsonFormatters';
 
 const API_URL = 'http://www.omdbapi.com/?';

@@ -1,5 +1,5 @@
 import classes from '*.module.css';
-import { CircularProgress, Dialog, DialogTitle } from '@material-ui/core';
+import { CircularProgress, Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import React from 'react';
 import { MovieDetailsState } from '../slices/movieDetailsSlice';
 import './movieDetailDialog.scss'
@@ -20,14 +20,13 @@ function MovieDetailDialog(props: MovieDetailDialogProps) {
     }}
     className="dialogBox"
    open={props.open}>
-      <DialogTitle id="simple-dialog-title">Movie Details</DialogTitle>
+     <DialogContent style={{ overflow: "hidden" }}>
+     <DialogTitle id="simple-dialog-title">Movie Details</DialogTitle>
       {props.movieDetailsState.loading === 'pending' ? 
       <CircularProgress size={68} /> : 
       props.movieDetailsState.loading === 'success' ? <>
         <label>ID:</label>
         <p>{props.movieDetailsState.movieDetails.imdb.id}</p>
-        <label>Poster:</label>
-        <p>{props.movieDetailsState.movieDetails.poster}</p>
         <label>Title:</label>
         <p>{props.movieDetailsState.movieDetails.title}</p>
         <label>Type:</label>
@@ -39,10 +38,12 @@ function MovieDetailDialog(props: MovieDetailDialogProps) {
         <label>Actors:</label>
         <p>
         {props.movieDetailsState.movieDetails.actors.map((actor) =>
-          <>{actor} | </>
+          <> | {actor}</>
         )}</p>
       </>
       : <label>Failed to load info!</label>}
+     </DialogContent>
+      
     </Dialog>
   }
 

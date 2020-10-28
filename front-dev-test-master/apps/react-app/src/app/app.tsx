@@ -4,15 +4,12 @@ import { List } from '@material-ui/core';
 import { ListItem } from '@material-ui/core';
 import { ListItemText } from '@material-ui/core';
 import { Provider, useDispatch, useSelector } from 'react-redux'
-
 import './app.scss';
 import { fetchMovieSearchList, getMovieSearchListStarted, MovieListState } from './slices/movieListSlice';
 import { fetchMovieDetails, getMovieDetailsFailed, getMovieDetailsStarted, MovieDetailsState } from './slices/movieDetailsSlice';
 import { setOpen } from './slices/movieDetailsSlice';
-import rootReducer, { RootState } from './rootReducer';
-import { createStore, applyMiddleware } from '@reduxjs/toolkit';
+import { RootState } from './rootReducer';
 import store from './store';
-import { Movie, MovieDetailed, MovieSearchResult } from 'custom-project-typings';
 import MovieDetailDialog from './components/movieDetailDialog';
 
 // I had to dig hard to find that this was supposed to be how the project is set up... 
