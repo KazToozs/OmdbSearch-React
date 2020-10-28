@@ -13,6 +13,7 @@ import rootReducer, { RootState } from './rootReducer';
 import { createStore, applyMiddleware } from '@reduxjs/toolkit';
 import store from './store';
 import { Movie, MovieDetailed, MovieSearchResult } from 'custom-project-typings';
+import MovieDetailDialog from './components/movieDetailDialog';
 
 // I had to dig hard to find that this was supposed to be how the project is set up... 
 // https://github.com/reduxjs/rtk-github-issues-example/blob/master/src/index.tsx
@@ -28,57 +29,30 @@ export const AppWrapper = () => {
 
 class Omdb {
   /* 
-  ** Function to recover movies from API
   ** Takes dispatch as parameter to avoid 'not called in function component' issues 
   ** I'm tryin my best here ¯\_(ツ)_/¯
-  ** TODO: Maybe set dispatch as a class attribute and have it set on construction?
   */
-  searchMovies(search: string, dispatch: Dispatch<any>) {
-    // use a dispatch on a reducer from the movieListSlice
-    dispatch(fetchMovieSearchList(search))
+  dispatch: Dispatch<any>;
+
+  constructor(dispatcher: Dispatch<any>) {
+    this.dispatch = dispatcher
   }
 
-  getMovie(id: string, dispatch: Dispatch<any>) {
+  searchMovies(search: string) {
+    // use a dispatch on a reducer from the movieListSlice
+    this.dispatch(fetchMovieSearchList(search))
+  }
+
+  getMovie(id: string) {
     // use a dispatch on a reducer from the movieListSlice
     console.log(id)
-    dispatch(fetchMovieDetails(id))
+    this.dispatch(fetchMovieDetails(id))
   }
-}
-
-// TODO: move this into it's own file
-interface MovieDetailDialogProps {
-  open: boolean,
-  movieDetailsState: MovieDetailsState
-}
-function MovieDetailDialog(props: MovieDetailDialogProps) {
-  let info
-  if (props.movieDetailsState.movieDetails == null) {
-    info = <label>Not loaded yet!</label>
-  } else {
-    const actors = props.movieDetailsState.movieDetails.actors.map(actor =>
-        <label key={actor}>{actor}</label>
-        );
-    info = <div>
-      <label>ID: {props.movieDetailsState.movieDetails.imdb.id}</label>
-      <label>Poster: {props.movieDetailsState.movieDetails.poster}</label>
-      <label>Title: {props.movieDetailsState.movieDetails.title}</label>
-      <label>Type: {props.movieDetailsState.movieDetails.type}</label>
-      <label>Year: {props.movieDetailsState.movieDetails.year}</label>
-      <label>Synopsis: {props.movieDetailsState.movieDetails.plot}</label>
-      <label>Actors: {actors}</label>
-    </div>
-  }
-  return <Dialog open={props.open}>
-    <DialogTitle id="simple-dialog-title">Movie Details</DialogTitle>
-    {props.movieDetailsState.loading === 'pending' ? <CircularProgress size={68} /> : 
-    props.movieDetailsState.loading === 'success' ? info : <label>Failed to load info!</label>}
-
-  </Dialog>
 }
 
 const App: React.FC = () => {
-  const omdbObject: Omdb = new Omdb
   const dispatch = useDispatch()
+  const omdbObject: Omdb = new Omdb(dispatch)
 
   // useSelector to use data from store and subscribe to updates
   const movieListState: MovieListState = useSelector(
@@ -91,20 +65,16 @@ const App: React.FC = () => {
 
   const [searchString, setSearchString] = useState("")
 
-  // useEffect(() => {
-  //   omdbObject.searchMovies("test", dispatch)    
-  // }, [])
-  
   function handleSearchOnChange(event) {
-    dispatch(getMovieSearchListStarted)
-    omdbObject.searchMovies(event.target.value, dispatch)
     setSearchString(event.target.value)
+    dispatch(getMovieSearchListStarted)
+    omdbObject.searchMovies(event.target.value)
   }
 
   function handleItemClick(id: string) {
     dispatch(setOpen())
     dispatch(getMovieDetailsStarted)
-    omdbObject.getMovie(id, dispatch)
+    omdbObject.getMovie(id)
   }
   
   return <div className="app">

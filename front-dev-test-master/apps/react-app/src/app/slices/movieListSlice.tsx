@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Movie, MovieSearchResult } from 'custom-project-typings';
 import { AppThunk } from '../store';
 import durableJsonLint from 'durable-json-lint'
+import { formatYear } from '../utils/omdbJsonFormatters';
 
 const API_URL = 'http://www.omdbapi.com/?';
 const API_KEY = '&apikey=23aaa32';
@@ -46,24 +47,7 @@ export const {
   getMovieSearchListFailed,
 } = movieListSlice.actions;
 
-// Copied from https://github.com/misterhat/omdb/blob/master/index.js
-// No point reinventing the wheel ¯\_(ツ)_/¯
-// Worth having another pass to make TS friendly...
-// Maybe transpose to Omdb class?
-function formatYear(year) {
-  var from, to;
-  year = year.split('–');
 
-  if (year.length === 2) {
-      from = +year[0];
-
-      if (year[1]) {
-          to = +year[1];
-      }
-      return { from: from, to: to };
-  }
-  return +year;
-}
 
 /*
 ** more on async thunks here https://redux-toolkit.js.org/usage/usage-with-typescript#createasyncthunk

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Movie, MovieDetailed, MovieSearchResult } from 'custom-project-typings';
 import { AppThunk } from '../store';
 import durableJsonLint from 'durable-json-lint'
+import { formatAwards, formatList, formatRuntime, formatYear } from '../utils/omdbJsonFormatters';
 
 const API_URL = 'http://www.omdbapi.com/?';
 const API_KEY = '&apikey=23aaa32';
@@ -26,7 +27,6 @@ const movieDetailsSlice = createSlice({
         // TODO: make this depend  on payload
       // Need to convert data to Movie format
       state.open = !state.open
-      console.log(state.open)
     },
     getMovieDetailsStarted(state) {
         state.movieDetails = null;
@@ -38,7 +38,6 @@ const movieDetailsSlice = createSlice({
       state.loading = 'success';
     },
     getMovieDetailsFailed(state, action: PayloadAction<string>) {
-        // TODO: set loading banner based on failure to load
         state.movieDetails = null
         state.loading = 'failed'
     }
@@ -51,82 +50,15 @@ export const {
     getMovieDetailsFailed,
 } = movieDetailsSlice.actions;
 
-// TODO: Maybe move the following formatting functions to Omdb class for cleaner code
-function formatYear(year) {
-  var from, to;
-  year = year.split('–');
-
-  if (year.length === 2) {
-      from = +year[0];
-
-      if (year[1]) {
-          to = +year[1];
-      }
-      return { from: from, to: to };
-  }
-  return +year;
-}
-
-function formatRuntime(raw) {
-    var hours, minutes;
-
-    if (!raw) {
-        return null;
-    }
-
-    hours = raw.match(/(\d+) h/);
-    minutes = raw.match(/(\d+) min/);
-
-    hours = hours ? hours[1] : 0;
-    minutes = minutes ? +minutes[1] : 0;
-
-    return (hours * 60) + minutes;
-}
-
-function formatList(raw) {
-    var list;
-
-    if (!raw) {
-        return [];
-    }
-
-    list = raw.replace(/\(.+?\)/g, '').split(', ');
-    list = list.map(function (item) {
-        return item.trim();
-    });
-
-    return list;
-}
-
-// function formatVotes(raw) {
-//     return raw ? +raw.match(/\d/g).join('') : null;
-// }
-
-function formatAwards(raw) {
-    var wins, nominations;
-
-    if (!raw) {
-        return { wins: 0, nominations: 0, text: '' };
-    }
-
-    wins = raw.match(/(\d+) wins?/i);
-    nominations = raw.match(/(\d+) nominations?/i);
-
-    return {
-        wins: wins ? +wins[1] : 0,
-        nominations: nominations ? +nominations[1] : 0,
-        text: raw
-    };
-}
-
 /*
 ** more on async thunks here https://redux-toolkit.js.org/usage/usage-with-typescript#createasyncthunk
 ** Here I copied the 'AppThunk' type as it applies to our purposes and is common: 
 ** https://redux-toolkit.js.org/tutorials/advanced-tutorial#logic-for-fetching-github-repo-details
 */
 
-// TODO: make this take a JSON object and not 'any'
+// Way to make this take a JSON object and not 'any'?
 function makeMovieDetailedFromJson(movie: any) {
+
     return {
         title: movie.Title,
         year: formatYear(movie.Year),
