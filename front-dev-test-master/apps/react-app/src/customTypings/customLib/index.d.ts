@@ -7,6 +7,7 @@ declare module 'custom-project-typings' {
         posterUrl: string
     }
 
+    // Way to have 1 type instead of 2 given the different JSON objects in a clean manner?
     export type MovieDetailed = {
         title: string,
         year: number | {from: number, to: number},

@@ -24,7 +24,11 @@ const movieDetailsSlice = createSlice({
   initialState: initialState,
   reducers: {
     setOpen(state, action: PayloadAction<boolean>) {
-        // TODO: make this depend  on payload
+        /* 
+        ** TODO: make this depend  on payload. Currently this only works because clicking
+        ** anywhere when the dialog is open counts as clicking the parent item because
+        ** the dialog covers the whole page (I think?)
+        */ 
       // Need to convert data to Movie format
       state.open = !state.open
     },

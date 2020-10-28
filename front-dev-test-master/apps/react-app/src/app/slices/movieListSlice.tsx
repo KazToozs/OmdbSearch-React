@@ -33,7 +33,6 @@ const movieListSlice = createSlice({
       state.loading = 'success';
     },
     getMovieSearchListFailed(state, action: PayloadAction<string>) {
-      // TODO: set loading banner based on failure to load
       state.movieList = [];
       state.loading = 'failed';
       state.error = action.payload

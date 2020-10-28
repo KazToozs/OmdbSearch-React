@@ -1,25 +1,25 @@
 
 // Formatting functions for the OMDB API copied from https://github.com/misterhat/omdb/blob/master/index.js
 // No point reinventing the wheel ¯\_(ツ)_/¯
-// TODO: Worth having another pass to make TS friendly...
+// Made a pass to make more 'TS friendly'...
 
-export function formatYear(year) {
-    var from, to;
-    year = year.split('–');
+export function formatYear(year: string) {
+    let from: number, to: number;
+    let yearSplit = year.split('–');
   
-    if (year.length === 2) {
-        from = +year[0];
+    if (yearSplit.length === 2) {
+        from = +yearSplit[0];
   
-        if (year[1]) {
-            to = +year[1];
+        if (yearSplit[1]) {
+            to = +yearSplit[1];
         }
         return { from: from, to: to };
     }
-    return +year;
+    return +yearSplit;
   }
   
-  export function formatRuntime(raw) {
-      var hours, minutes;
+  export function formatRuntime(raw: string) {
+      let hours: any, minutes: any;
   
       if (!raw) {
           return null;
@@ -34,8 +34,8 @@ export function formatYear(year) {
       return (hours * 60) + minutes;
   }
   
-  export function formatList(raw) {
-      var list;
+  export function formatList(raw: string) {
+      let list: string[];
   
       if (!raw) {
           return [];
@@ -49,8 +49,8 @@ export function formatYear(year) {
       return list;
   }
   
-  export function formatAwards(raw) {
-      var wins, nominations;
+  export function formatAwards(raw: string) {
+      let wins: any, nominations: any;
   
       if (!raw) {
           return { wins: 0, nominations: 0, text: '' };

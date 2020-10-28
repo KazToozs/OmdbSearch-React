@@ -72,6 +72,7 @@ const App: React.FC = () => {
   }
 
   function handleItemClick(id: string) {
+    console.log(movieDetailsState.open)
     dispatch(setOpen())
     dispatch(getMovieDetailsStarted)
     omdbObject.getMovie(id)
