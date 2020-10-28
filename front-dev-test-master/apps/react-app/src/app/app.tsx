@@ -79,9 +79,10 @@ const App: React.FC = () => {
   }
   
   return <div className="app">
-    <TextField label="Search" margin="normal" variant="outlined" value={searchString} onChange={handleSearchOnChange}/>
+    <h1>OMDB Movie Search</h1>
+    <TextField label="Search" margin="normal" variant="outlined" value={searchString} onChange={handleSearchOnChange} fullWidth={true}/>
     {movieListState.loading === "pending" ? <CircularProgress size={68} /> : 
-    movieListState.loading === "failed" ? <label>Failed to load list: {movieListState.error}</label> : 
+    movieListState.loading === "failed" ? <label className="failedBanner">Failed to load list: {movieListState.error}</label> : 
     <List >
       {movieListState.movieList.map(({imdbId, posterUrl, title, ...rest }) => (
         <ListItem key={imdbId} button onClick={() => handleItemClick(imdbId)}>

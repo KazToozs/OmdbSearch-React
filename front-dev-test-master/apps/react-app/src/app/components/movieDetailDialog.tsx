@@ -1,35 +1,48 @@
+import classes from '*.module.css';
 import { CircularProgress, Dialog, DialogTitle } from '@material-ui/core';
 import React from 'react';
 import { MovieDetailsState } from '../slices/movieDetailsSlice';
+import './movieDetailDialog.scss'
 
 interface MovieDetailDialogProps {
     open: boolean;
     movieDetailsState: MovieDetailsState;
   }
 
+
 function MovieDetailDialog(props: MovieDetailDialogProps) {
-    let info
-    if (props.movieDetailsState.movieDetails == null) {
-      info = <label>Not loaded yet!</label>
-    } else {
-      const actors = props.movieDetailsState.movieDetails.actors.map(actor =>
-          <label key={actor}>{actor}</label>
-          );
-      info = <div>
-        <label>ID: {props.movieDetailsState.movieDetails.imdb.id}</label>
-        <label>Poster: {props.movieDetailsState.movieDetails.poster}</label>
-        <label>Title: {props.movieDetailsState.movieDetails.title}</label>
-        <label>Type: {props.movieDetailsState.movieDetails.type}</label>
-        <label>Year: {props.movieDetailsState.movieDetails.year}</label>
-        <label>Synopsis: {props.movieDetailsState.movieDetails.plot}</label>
-        <label>Actors: {actors}</label>
-      </div>
-    }
-    return <Dialog open={props.open}>
+  // Customising the dialog box style has proven to be somewhat convoluted...
+    return <Dialog 
+    PaperProps={{
+      style: {
+        padding: 10,
+      },
+    }}
+    className="dialogBox"
+   open={props.open}>
       <DialogTitle id="simple-dialog-title">Movie Details</DialogTitle>
-      {props.movieDetailsState.loading === 'pending' ? <CircularProgress size={68} /> : 
-      props.movieDetailsState.loading === 'success' ? info : <label>Failed to load info!</label>}
-  
+      {props.movieDetailsState.loading === 'pending' ? 
+      <CircularProgress size={68} /> : 
+      props.movieDetailsState.loading === 'success' ? <>
+        <label>ID:</label>
+        <p>{props.movieDetailsState.movieDetails.imdb.id}</p>
+        <label>Poster:</label>
+        <p>{props.movieDetailsState.movieDetails.poster}</p>
+        <label>Title:</label>
+        <p>{props.movieDetailsState.movieDetails.title}</p>
+        <label>Type:</label>
+        <p>{props.movieDetailsState.movieDetails.type}</p>
+        <label>Year:</label>
+        <p>{props.movieDetailsState.movieDetails.year}</p>
+        <label>Synopsis:</label>
+        <p>{props.movieDetailsState.movieDetails.plot}</p>
+        <label>Actors:</label>
+        <p>
+        {props.movieDetailsState.movieDetails.actors.map((actor) =>
+          <>{actor} | </>
+        )}</p>
+      </>
+      : <label>Failed to load info!</label>}
     </Dialog>
   }
 

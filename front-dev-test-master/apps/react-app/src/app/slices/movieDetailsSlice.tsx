@@ -29,7 +29,6 @@ const movieDetailsSlice = createSlice({
         ** anywhere when the dialog is open counts as clicking the parent item because
         ** the dialog covers the whole page (I think?)
         */ 
-      // Need to convert data to Movie format
       state.open = !state.open
     },
     getMovieDetailsStarted(state) {

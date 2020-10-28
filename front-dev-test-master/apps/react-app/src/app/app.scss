@@ -126,3 +126,13 @@
   width: 16px;
   margin-right: 4px;
 }
+
+.failedBanner {
+  display: flex;
+  background-color: red;
+  width: 100%;
+  height: auto;
+  color: white;
+  text-align: center;
+  justify-content: center;
+}
