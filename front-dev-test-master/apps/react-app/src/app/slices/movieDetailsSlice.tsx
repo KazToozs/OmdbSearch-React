@@ -47,12 +47,6 @@ export const {
     getMovieDetailsFailed,
 } = movieDetailsSlice.actions;
 
-/*
-** more on async thunks here https://redux-toolkit.js.org/usage/usage-with-typescript#createasyncthunk
-** Here I copied the 'AppThunk' type as it applies to our purposes and is common: 
-** https://redux-toolkit.js.org/tutorials/advanced-tutorial#logic-for-fetching-github-repo-details
-*/
-
 // Way to make this take a JSON object and not 'any'?
 function makeMovieDetailedFromJson(movie: any) {
 
@@ -96,6 +90,11 @@ function makeMovieDetailedFromJson(movie: any) {
       }
 }
 
+/*
+** more on async thunks here https://redux-toolkit.js.org/usage/usage-with-typescript#createasyncthunk
+** Here I copied the 'AppThunk' type as it applies to our purposes and is common: 
+** https://redux-toolkit.js.org/tutorials/advanced-tutorial#logic-for-fetching-github-repo-details
+*/
 export const fetchMovieDetails = (movieId: string): AppThunk => async (
   dispatch // ,getState -> to access state data in the thunk before executing an action function (see more above)  
 ) => {
@@ -104,7 +103,7 @@ export const fetchMovieDetails = (movieId: string): AppThunk => async (
   let jsonData
   try {
     const response = await fetch(API_URL + API_KEY + searchParam);
-    // .json() not working, using work around, like here at l.217 https://github.com/misterhat/omdb/blob/master/index.js
+    // .json() not working for received response, using work around, like here at l.217 https://github.com/misterhat/omdb/blob/master/index.js
     const data = await response.text();
     jsonData = JSON.parse(data)
 
