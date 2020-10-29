@@ -11,3 +11,12 @@
 .dialogBox p {
   display: flex;
 }
+
+.actors {
+  display: flex;
+  flex-direction: row;
+}
+
+.actors p {
+  margin-right: 10px;
+}

@@ -22,13 +22,8 @@ const movieDetailsSlice = createSlice({
   name: 'movieDetails',
   initialState: initialState,
   reducers: {
-    setOpen(state, action: PayloadAction<boolean>) {
-        /* 
-        ** TODO: make this depend  on payload. Currently this only works because clicking
-        ** anywhere when the dialog is open counts as clicking the parent item because
-        ** the dialog covers the whole page (I think?)
-        */ 
-      state.open = !state.open
+    setDialogOpen(state, action: PayloadAction<boolean>) {
+      state.open = action.payload
     },
     getMovieDetailsStarted(state) {
         state.movieDetails = null;
@@ -36,7 +31,6 @@ const movieDetailsSlice = createSlice({
     },
     getMovieDetailsSuccess(state, action: PayloadAction<MovieDetailed>) {
       state.movieDetails = action.payload;
-      console.log(state.movieDetails)
       state.loading = 'success';
     },
     getMovieDetailsFailed(state, action: PayloadAction<string>) {
@@ -47,6 +41,7 @@ const movieDetailsSlice = createSlice({
 });
 
 export const {
+    setDialogOpen,
     getMovieDetailsStarted,
     getMovieDetailsSuccess,
     getMovieDetailsFailed,
@@ -112,7 +107,6 @@ export const fetchMovieDetails = (movieId: string): AppThunk => async (
     // .json() not working, using work around, like here at l.217 https://github.com/misterhat/omdb/blob/master/index.js
     const data = await response.text();
     jsonData = JSON.parse(data)
-    console.log(jsonData)
 
     // API can receive requests that cannot be treated, in which case it returns "{"Response":"False","Error":"Error blah blah"}"
     // This must be handled here
@@ -129,7 +123,6 @@ export const fetchMovieDetails = (movieId: string): AppThunk => async (
   dispatch(getMovieDetailsSuccess(movieDetails));
 };
 
-export const { setOpen } = movieDetailsSlice.actions
 export default movieDetailsSlice.reducer;
 
 

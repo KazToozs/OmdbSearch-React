@@ -7,7 +7,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux'
 import './app.scss';
 import { fetchMovieSearchList, getMovieSearchListStarted, MovieListState } from './slices/movieListSlice';
 import { fetchMovieDetails, getMovieDetailsFailed, getMovieDetailsStarted, MovieDetailsState } from './slices/movieDetailsSlice';
-import { setOpen } from './slices/movieDetailsSlice';
+import { setDialogOpen } from './slices/movieDetailsSlice';
 import { RootState } from './rootReducer';
 import store from './store';
 import MovieDetailDialog from './components/movieDetailDialog';
@@ -42,7 +42,6 @@ class Omdb {
 
   getMovie(id: string) {
     // use a dispatch on a reducer from the movieListSlice
-    console.log(id)
     this.dispatch(fetchMovieDetails(id))
   }
 }
@@ -69,8 +68,7 @@ const App: React.FC = () => {
   }
 
   function handleItemClick(id: string) {
-    console.log(movieDetailsState.open)
-    dispatch(setOpen())
+    dispatch(setDialogOpen(true))
     dispatch(getMovieDetailsStarted)
     omdbObject.getMovie(id)
   }
@@ -80,14 +78,16 @@ const App: React.FC = () => {
     <TextField label="Search" margin="normal" variant="outlined" value={searchString} onChange={handleSearchOnChange} fullWidth={true}/>
     {movieListState.loading === "pending" ? <CircularProgress size={68} /> : 
     movieListState.loading === "failed" ? <label className="failedBanner">Failed to load list: {movieListState.error}</label> : 
+    <>
     <List >
       {movieListState.movieList.map(({imdbId, posterUrl, title, ...rest }) => (
         <ListItem key={imdbId} button onClick={() => handleItemClick(imdbId)}>
           <ListItemText>{title}</ListItemText>
-          <MovieDetailDialog open={movieDetailsState.open} movieDetailsState={movieDetailsState}/>
         </ListItem>
       ))}
-    </List>}
+    </List>
+    <MovieDetailDialog/>
+    </>}
   </div>;
 };
 
